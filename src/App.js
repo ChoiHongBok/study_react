@@ -5,6 +5,7 @@ import './App.css';
 import Hello from './Hello';
 import Wrapper from './Wrapper';
 import InputSample from "./InputSample";
+import UserList from "./UserList";
 
 // <div class="클래스명"> -> <div className="클래스명"> 으로 사용
 /*function App() {
@@ -128,6 +129,12 @@ function App() {
                     <div>InputSample</div>
                 </div>
                 <InputSample />
+            </div>
+            <div>
+                <div className="nav-black">
+                    <div>UserList</div>
+                </div>
+                <UserList />
             </div>
         </div>);
 }
