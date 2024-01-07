@@ -1,14 +1,15 @@
 import React from "react";
 
-function User ({user}) {
+function User ({user, onRemove}) {
     return (
         <div>
             <b>{user.username}</b> <span>({user.email})</span>
+            <button onClick={() => onRemove(user.id, user.username, user.email)}>삭제</button>
         </div>
     );
 };
 
-function UserList ({users}) {
+function UserList ({users, onRemove}) {
     // const users = [
     //     {
     //         id: 1,
@@ -36,8 +37,11 @@ function UserList ({users}) {
             {/*{users.map(user => (*/}
             {/*    <User user={user} key={user.id} />  // React 는 배열을 랜더링 할 떄에는 key 라는 props 를 설정해야한다.*/}
             {/*))}*/}
-            {users.map((user, index) => (
-                <User user={user} key={index} />  // key 가 없으면 index 라도 넣어준다
+            {/*{users.map((user, index) => (*/}
+            {/*    <User user={user} key={index} />  // key 가 없으면 index 라도 넣어준다*/}
+            {/*))}*/}
+            {users.map((user, id) => (
+                <User user={user} key={id} onRemove={onRemove} />  // key 가 없으면 index 라도 넣어준다
             ))}
         </div>
     );

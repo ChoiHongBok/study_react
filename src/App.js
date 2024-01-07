@@ -120,13 +120,20 @@ function App() {
         });
     };
 
+    const onRemove = (id, username, email) => {
+        console.log(id);
+        console.log(username);
+        console.log(email);
+        setUsers(users.filter(user => user.id !== id));
+    };
+
     return (
         <div className="App">
             <div>
                 <div className="nav-black">
                     <div>UserList</div>
                 </div>
-                <UserList users={users} />
+                <UserList users={users} onRemove={onRemove} />
             </div>
             <div>
                 <div className="nav-black">
