@@ -1,11 +1,12 @@
 // warning 을 보고 싶지 않다면 /* eslint-disable */ 작성하기 /**/ 도 같이 작성해야함
 import React, {useState} from "react";
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import Hello from './Hello';
 import Wrapper from './Wrapper';
 import InputSample from "./InputSample";
 import UserList from "./UserList";
+import CreateUser from "./CreateUser";
 
 // <div class="클래스명"> -> <div className="클래스명"> 으로 사용
 /*function App() {
@@ -50,7 +51,7 @@ function App() {
     let cafe = <h2 style={tempColor}>Cafe</h2>;
 
     // className 에 사용하기 위한 데이터
-    let temp = 'logo';
+    // let temp = 'logo';
 
     function fnChangeTitle () {
         let newArray = [...title];
@@ -70,8 +71,69 @@ function App() {
         setNumber(number - 1);
     };
 
+    const [users, setUsers] = useState([
+        {
+            id: 1,
+            username: 'velopert',
+            email: 'public.velopert@gmail.com'
+        },
+        {
+            id: 2,
+            username: 'tester',
+            email: 'tester@example.com'
+        },
+        {
+            id: 3,
+            username: 'liz',
+            email: 'liz@example.com'
+        }
+    ]);
+
+    const [user, setUser] = useState({
+        username: "",
+        email: ""
+    });
+
+    const {username, email} = user;
+
+    const onChange = (e) => {
+        const { name, value } = e.target;
+
+        setUser({
+            ...user,
+            [name]: value
+        });
+    };
+
+    const onCreate = () => {
+        const inputData = {
+            id: users.length + 1,
+            username,
+            email
+        };
+
+        setUsers([...users, inputData]);
+
+        setUser({
+            username: '',
+            email: ''
+        });
+    };
+
     return (
         <div className="App">
+            <div>
+                <div className="nav-black">
+                    <div>UserList</div>
+                </div>
+                <UserList users={users} />
+            </div>
+            <div>
+                <div className="nav-black">
+                    <div>Create User</div>
+                </div>
+                <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate}/>
+            </div>
             <div>
                 <div className="nav-black">
                     <div>React Study</div>
@@ -129,12 +191,6 @@ function App() {
                     <div>InputSample</div>
                 </div>
                 <InputSample />
-            </div>
-            <div>
-                <div className="nav-black">
-                    <div>UserList</div>
-                </div>
-                <UserList />
             </div>
         </div>);
 }

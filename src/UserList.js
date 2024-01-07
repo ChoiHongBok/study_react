@@ -8,24 +8,24 @@ function User ({user}) {
     );
 };
 
-function UserList () {
-    const users = [
-        {
-            id: 1,
-            username: 'Number 1',
-            email: 'number1@gmail.com'
-        },
-        {
-            id: 2,
-            username: 'Number 2',
-            email: 'number2@gmail.com'
-        },
-        {
-            id: 3,
-            username: 'Number 3',
-            email: 'number3@gmail.com'
-        }
-    ];
+function UserList ({users}) {
+    // const users = [
+    //     {
+    //         id: 1,
+    //         username: 'Number 1',
+    //         email: 'number1@gmail.com'
+    //     },
+    //     {
+    //         id: 2,
+    //         username: 'Number 2',
+    //         email: 'number2@gmail.com'
+    //     },
+    //     {
+    //         id: 3,
+    //         username: 'Number 3',
+    //         email: 'number3@gmail.com'
+    //     }
+    // ];
 
     // 배열 랜더링 시 고유한 key 가 필요한 이유는 랜더링 시 효율성 때문이다 시각적으로 보고 싶으면 https://react.vlpt.us/basic/11-render-array.html 를 참고
     return (
