@@ -1,5 +1,5 @@
 // warning 을 보고 싶지 않다면 /* eslint-disable */ 작성하기 /**/ 도 같이 작성해야함
-import React, {useState} from "react";
+import React, {useRef, useState, useMemo} from "react";
 // import logo from './logo.svg';
 import './App.css';
 import Hello from './Hello';
@@ -21,6 +21,11 @@ import CreateUser from "./CreateUser";
             </header>
         </div>);
 }*/
+
+function countActiveUsers (users) {
+    console.log("활성 사용자 수를 세는중...");
+    return users.filter(user => user.active).length;
+}
 
 function App() {
 
@@ -149,12 +154,16 @@ function App() {
         );
     };
 
+    // useMemo 후 메모리할 데이터를 deps 에 넣어주면 users 가 변경되면 함수 실행 / 변경이 없으면 기존값 재사용
+    let activeUser = useMemo(() => countActiveUsers(users), [users]);
+
     return (
         <div className="App">
             <div>
                 <div className="nav-black">
                     <div>UserList</div>
                 </div>
+                <h3>활성 사용자 수 : {activeUser} 명</h3>
                 <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
             </div>
             <div>
