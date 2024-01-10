@@ -1,5 +1,5 @@
 // warning 을 보고 싶지 않다면 /* eslint-disable */ 작성하기 /**/ 도 같이 작성해야함
-import React, {useRef, useState, useMemo} from "react";
+import React, {useRef, useState, useMemo, useCallback} from "react";
 // import logo from './logo.svg';
 import './App.css';
 import Hello from './Hello';
@@ -110,49 +110,114 @@ function App() {
 
     const {username, email} = user;
 
-    const onChange = (e) => {
-        const { name, value } = e.target;
+    // useCallback 사용전
+    // const onChange = (e) => {
+    //     const { name, value } = e.target;
+    //
+    //     setUser({
+    //         ...user,
+    //         [name]: value
+    //     });
+    // };
+    // useCallback 사용후
+    const onChange = useCallback((e) => {
+            const {name, value} = e.target;
 
-        setUser({
-            ...user,
-            [name]: value
-        });
-    };
+            setUser({
+                ...user,
+                [name]: value
+            })
+        },
+        [user]
+    );
 
-    const onCreate = () => {
-        const inputData = {
-            id: users.length + 1,
-            username,
-            email
-        };
-        // const inputData = {
-        //     id: users.length + 1,
-        //     username: username,
-        //     email: email
-        // };
+    // useCallback 사용전
+    // const onCreate = () => {
+    //     const inputData = {
+    //         id: users.length + 1,
+    //         username,
+    //         email
+    //     };
+    //     // const inputData = {
+    //     //     id: users.length + 1,
+    //     //     username: username,
+    //     //     email: email
+    //     // };
+    //
+    //     setUsers([...users, inputData]);
+    //
+    //     setUser({
+    //         username: '',
+    //         email: ''
+    //     });
+    // };
+    // useCallback 사용후
+    const onCreate = useCallback(() => {
+            const inputData = {
+                id: users.length + 1,
+                username,
+                email
+            };
 
-        setUsers([...users, inputData]);
+            setUsers([...users, inputData]);
 
-        setUser({
-            username: '',
-            email: ''
-        });
-    };
+            setUser({
+                username: "",
+                email: ""
+            })
+        },
+        [users, username, email]
+    );
 
-    const onRemove = (id, username, email) => {
-        console.log(id);
-        console.log(username);
-        console.log(email);
-        setUsers(users.filter(user => user.id !== id));
-    };
+    // useCallback 사용전
+    // const onRemove = (id/*, username, email*/) => {
+    //     // console.log(id);
+    //     // console.log(username);
+    //     // console.log(email);
+    //     setUsers(users.filter(user => user.id !== id));
+    // };
+    // useCallback 사용후
+    const onRemove = useCallback((id) => {
+            setUsers(users.filter(user => user.id !== id));
+        },
+        [users]
+    );
 
-    const onToggle = (id) => {
-        setUsers(
-            users.map(user => (
-                user.id === id ? {...user, active: !user.active} : user
-            ))
-        );
-    };
+    // useCallback 사용전
+    // const onToggle = (id) => {
+    //     setUsers(
+    //         users.map(user => (
+    //             user.id === id ? {...user, active: !user.active} : user
+    //         ))
+    //     );
+    // };
+    // useCallback 사용후
+    const onToggle = useCallback((id) => {
+            setUsers(
+                users.map(user => (
+                    user.id === id ? {
+                        ...user,
+                        active: !user.active
+                    } : user
+                ))
+            );
+        },
+        [users]
+    );
+
+    //#######################################
+    // useCallback 은 useMemo 를 기반으로 만들었다
+    // const a = useMemo(() => () => {
+    //
+    //     },
+    //     []
+    // );
+    // const b = useCallback(() => {
+    //
+    //     },
+    //     []
+    // )
+    //#######################################
 
     // useMemo 후 메모리할 데이터를 deps 에 넣어주면 users 가 변경되면 함수 실행 / 변경이 없으면 기존값 재사용
     let activeUser = useMemo(() => countActiveUsers(users), [users]);
