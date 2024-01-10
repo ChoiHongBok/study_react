@@ -121,4 +121,7 @@ function UserList ({users, onRemove, onToggle}) {
 //     );
 // };
 
-export default UserList;
+// export default React.memo(UserList);
+// propsAreEqual 함수를 통해 특정 값들만 비교를 하는것도 가능합니다
+export default React.memo(UserList, (prevProps, nextProps) => prevProps.users === nextProps.users);
+// 하지만 함수형 업데이트로 전환을 안했는데 이렇게 users 만 비교를 하게 된다면, onToggle 과 onRemove 에서 최신 users 배열을 참조하지 않으므로 심각한 오류가 발생할 수 있다

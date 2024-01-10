@@ -123,12 +123,17 @@ function App() {
     const onChange = useCallback((e) => {
             const {name, value} = e.target;
 
-            setUser({
+            // setUser({
+            //     ...user,
+            //     [name]: value
+            // })
+            setUser(user => ({
                 ...user,
                 [name]: value
-            })
+            }));
         },
-        [user]
+        // [user]
+        []
     );
 
     // useCallback 사용전
@@ -159,14 +164,16 @@ function App() {
                 email
             };
 
-            setUsers([...users, inputData]);
+            // setUsers([...users, inputData]);
+            setUsers(users => users.concat(inputData));
 
             setUser({
                 username: "",
                 email: ""
             })
         },
-        [users, username, email]
+        // [users, username, email]
+        [username, email]
     );
 
     // useCallback 사용전
@@ -178,9 +185,11 @@ function App() {
     // };
     // useCallback 사용후
     const onRemove = useCallback((id) => {
-            setUsers(users.filter(user => user.id !== id));
+            // setUsers(users.filter(user => user.id !== id));
+            setUsers(users => users.filter(user => user.id !== id));
         },
-        [users]
+        // [users]
+        []
     );
 
     // useCallback 사용전
@@ -193,7 +202,15 @@ function App() {
     // };
     // useCallback 사용후
     const onToggle = useCallback((id) => {
-            setUsers(
+            // setUsers(
+            //     users.map(user => (
+            //         user.id === id ? {
+            //             ...user,
+            //             active: !user.active
+            //         } : user
+            //     ))
+            // );
+            setUsers(users =>
                 users.map(user => (
                     user.id === id ? {
                         ...user,
@@ -202,8 +219,11 @@ function App() {
                 ))
             );
         },
-        [users]
+        // [users]
+        []
     );
+    // 리액트 개발 시 useCallback, useMemo, React.memo 는 컴포넌트의 성능을 실제로 개선할 수 있는 상황에서만 사용
+    // User 컴포넌트에 b 와 button 에 onclick 으로 설정해준 함수들은, 해당 함수들을 useCallback 으로 재사용한다고 리랜더링이 막아지지는 않음
 
     //#######################################
     // useCallback 은 useMemo 를 기반으로 만들었다
