@@ -1,12 +1,13 @@
 // warning 을 보고 싶지 않다면 /* eslint-disable */ 작성하기 /**/ 도 같이 작성해야함
-import React, {useRef, useState, useMemo, useCallback} from "react";
+import React, {useRef, useState, useMemo, useCallback, useReducer} from "react";
 // import logo from './logo.svg';
 import './App.css';
-import Hello from './Hello';
-import Wrapper from './Wrapper';
-import InputSample from "./InputSample";
+// import Hello from './Hello';
+// import Wrapper from './Wrapper';
+// import InputSample from "./InputSample";
 import UserList from "./UserList";
 import CreateUser from "./CreateUser";
+// import Counter from "./Counter";
 
 // <div class="클래스명"> -> <div className="클래스명"> 으로 사용
 /*function App() {
@@ -23,11 +24,171 @@ import CreateUser from "./CreateUser";
 }*/
 
 function countActiveUsers (users) {
-    console.log("활성 사용자 수를 세는중...");
     return users.filter(user => user.active).length;
 }
 
+const initialState = {
+    inputs: {
+        username: "",
+        email: ""
+    },
+    users: [
+        {
+            id: 1,
+            username: "NAME_ONE",
+            email: "name_one@naver.com",
+            active: true
+        },{
+            id: 2,
+            username: "NAME_TWO",
+            email: "name_two@naver.com",
+            active: false
+        },{
+            id: 3,
+            username: "NAME_THREE",
+            email: "name_three@naver.com",
+            active: true
+        },{
+            id: 4,
+            username: "NAME_FOUR",
+            email: "name_four@naver.com",
+            active: false
+        },{
+            id: 5,
+            username: "NAME_FIVE",
+            email: "name_five@naver.com",
+            active: true
+        }
+    ]
+};
+
+function reducer (state, action) {
+    switch (action.type) {
+        case "CHANGE_INPUT" :
+            return {
+                ...state,
+                inputs: {
+                    ...state.inputs,
+                    [action.name]: action.value
+                }
+            };
+        case "CREATE_USER" :
+            return {
+                inputs: initialState.inputs,
+                users: state.users.concat(action.user)
+            };
+        case "TOGGLE_USER" :
+            return {
+                ...state,
+                users: state.users.map(user =>
+                    user.id === action.id ? {...user, active: !user.active} : user
+                )
+            };
+        case "REMOVE_USER" :
+            return {
+                ...state,
+                users: state.users.filter(user =>
+                    user.id !== action.id
+                )
+            };
+        default:
+            return state;
+    }
+}
+
 function App() {
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const {users} = state;
+    const {username, email} = state.inputs;
+
+    const onChange = useCallback(e => {
+        const {name, value} = e.target;
+
+        dispatch({
+            type: "CHANGE_INPUT",
+            name,
+            value
+        });
+    }, []);
+
+    const onCreate = useCallback(() => {
+        dispatch({
+            type: "CREATE_USER",
+            user: {
+                id: users.length + 1,
+                username,
+                email,
+                active: false
+            }
+        })
+    }, [username, email]);
+
+    const onToggle = useCallback((id) => {
+        dispatch({
+            type: "TOGGLE_USER",
+            id
+        });
+    }, []);
+
+    const onRemove = useCallback((id) => {
+        dispatch({
+            type: "REMOVE_USER",
+            id
+        });
+    }, []);
+
+    const countUser = useMemo(() => {
+        return countActiveUsers(users);
+    }, [users]);
+
+    return (
+        <div>
+            <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate} />
+            <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
+            <div>활성사용자수 : {countUser}</div>
+        </div>
+    );
+
+    // 컴포넌트가 관리하는 값(단순한 숫자, 문자열, boolean)이 딱 하나면 useState
+    // 컴포넌트가 관리하는 값이 여러개이고 구조가 복잡하다면 useReducer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*###############################################################################*/
 
     // state 란
     // 1. 변수 대신 쓰는 데이터 저장공간
@@ -41,74 +202,74 @@ function App() {
     // useState 를 이용한 테스트 데이터
     // let [name, function] function 으로 name 데이터를 변경
     // let [title, changeTitle] = useState("카페 이름 추천 받습니다");
-    let [title, changeTitle] = useState(["카페 이름 추천 받습니다", "사실 추천 안 받습니다"]);
-    let [views, changeViews] = useState(0);
-    let [number, setNumber] = useState(0);
+    // let [title, changeTitle] = useState(["카페 이름 추천 받습니다", "사실 추천 안 받습니다"]);
+    // let [views, changeViews] = useState(0);
+    // let [number, setNumber] = useState(0);
 
     // style 을 여러 방식으로 표현하기 위한 테스트 코드
-    let tempColor = {
-        color: "blue",
-        fontsize: "30px"
-    };
+    // let tempColor = {
+    //     color: "blue",
+    //     fontsize: "30px"
+    // };
 
     // let cafe = <h4>Cafe</h4>;
     // let cafe = <h4 style={{color: "blue", fontsize: "30px"}}>Cafe</h4>;
-    let cafe = <h2 style={tempColor}>Cafe</h2>;
+    // let cafe = <h2 style={tempColor}>Cafe</h2>;
 
     // className 에 사용하기 위한 데이터
     // let temp = 'logo';
 
-    function fnChangeTitle () {
-        let newArray = [...title];
-        newArray[0] = '카페 이름 추천 안 받습니다';
-        changeTitle(newArray);
-    };
+    // function fnChangeTitle () {
+    //     let newArray = [...title];
+    //     newArray[0] = '카페 이름 추천 안 받습니다';
+    //     changeTitle(newArray);
+    // };
 
     // 함수로도 사용 가능한다는것을 위한 테스트 함수
-    function textNumber () {
-        return <h4>100</h4>;
-    };
+    // function textNumber () {
+    //     return <h4>100</h4>;
+    // };
 
-    const onIncrease = () => {
-        setNumber(pervNumber => pervNumber + 1);
-    };
-    const onDecrease = () => {
-        setNumber(number - 1);
-    };
+    // const onIncrease = () => {
+    //     setNumber(pervNumber => pervNumber + 1);
+    // };
+    // const onDecrease = () => {
+    //     setNumber(number - 1);
+    // };
 
-    const [users, setUsers] = useState([
-        {
-            id: 1,
-            username: 'velopert',
-            email: 'public.velopert@gmail.com',
-            active: true
-        },
-        {
-            id: 2,
-            username: 'tester',
-            email: 'tester@example.com',
-            active: false
-        },
-        {
-            id: 3,
-            username: 'liz',
-            email: 'liz@example.com',
-            active: false
-        },
-        {
-            id: 4,
-            username: 'zsd',
-            email: 'zsd@example.com',
-            active: true
-        }
-    ]);
+    // const [users, setUsers] = useState([
+    //     {
+    //         id: 1,
+    //         username: 'velopert',
+    //         email: 'public.velopert@gmail.com',
+    //         active: true
+    //     },
+    //     {
+    //         id: 2,
+    //         username: 'tester',
+    //         email: 'tester@example.com',
+    //         active: false
+    //     },
+    //     {
+    //         id: 3,
+    //         username: 'liz',
+    //         email: 'liz@example.com',
+    //         active: false
+    //     },
+    //     {
+    //         id: 4,
+    //         username: 'zsd',
+    //         email: 'zsd@example.com',
+    //         active: true
+    //     }
+    // ]);
 
-    const [user, setUser] = useState({
-        username: "",
-        email: ""
-    });
+    // const [user, setUser] = useState({
+    //     username: "",
+    //     email: ""
+    // });
 
-    const {username, email} = user;
+    // const {username, email} = user;
 
     // useCallback 사용전
     // const onChange = (e) => {
@@ -120,21 +281,21 @@ function App() {
     //     });
     // };
     // useCallback 사용후
-    const onChange = useCallback((e) => {
-            const {name, value} = e.target;
-
-            // setUser({
-            //     ...user,
-            //     [name]: value
-            // })
-            setUser(user => ({
-                ...user,
-                [name]: value
-            }));
-        },
-        // [user]
-        []
-    );
+    // const onChange = useCallback((e) => {
+    //         const {name, value} = e.target;
+    //
+    //         // setUser({
+    //         //     ...user,
+    //         //     [name]: value
+    //         // })
+    //         setUser(user => ({
+    //             ...user,
+    //             [name]: value
+    //         }));
+    //     },
+    //     // [user]
+    //     []
+    // );
 
     // useCallback 사용전
     // const onCreate = () => {
@@ -157,24 +318,24 @@ function App() {
     //     });
     // };
     // useCallback 사용후
-    const onCreate = useCallback(() => {
-            const inputData = {
-                id: users.length + 1,
-                username,
-                email
-            };
-
-            // setUsers([...users, inputData]);
-            setUsers(users => users.concat(inputData));
-
-            setUser({
-                username: "",
-                email: ""
-            })
-        },
-        // [users, username, email]
-        [username, email]
-    );
+    // const onCreate = useCallback(() => {
+    //         const inputData = {
+    //             id: users.length + 1,
+    //             username,
+    //             email
+    //         };
+    //
+    //         // setUsers([...users, inputData]);
+    //         setUsers(users => users.concat(inputData));
+    //
+    //         setUser({
+    //             username: "",
+    //             email: ""
+    //         })
+    //     },
+    //     // [users, username, email]
+    //     [username, email]
+    // );
 
     // useCallback 사용전
     // const onRemove = (id/*, username, email*/) => {
@@ -184,13 +345,13 @@ function App() {
     //     setUsers(users.filter(user => user.id !== id));
     // };
     // useCallback 사용후
-    const onRemove = useCallback((id) => {
-            // setUsers(users.filter(user => user.id !== id));
-            setUsers(users => users.filter(user => user.id !== id));
-        },
-        // [users]
-        []
-    );
+    // const onRemove = useCallback((id) => {
+    //         // setUsers(users.filter(user => user.id !== id));
+    //         setUsers(users => users.filter(user => user.id !== id));
+    //     },
+    //     // [users]
+    //     []
+    // );
 
     // useCallback 사용전
     // const onToggle = (id) => {
@@ -201,27 +362,27 @@ function App() {
     //     );
     // };
     // useCallback 사용후
-    const onToggle = useCallback((id) => {
-            // setUsers(
-            //     users.map(user => (
-            //         user.id === id ? {
-            //             ...user,
-            //             active: !user.active
-            //         } : user
-            //     ))
-            // );
-            setUsers(users =>
-                users.map(user => (
-                    user.id === id ? {
-                        ...user,
-                        active: !user.active
-                    } : user
-                ))
-            );
-        },
-        // [users]
-        []
-    );
+    // const onToggle = useCallback((id) => {
+    //         // setUsers(
+    //         //     users.map(user => (
+    //         //         user.id === id ? {
+    //         //             ...user,
+    //         //             active: !user.active
+    //         //         } : user
+    //         //     ))
+    //         // );
+    //         setUsers(users =>
+    //             users.map(user => (
+    //                 user.id === id ? {
+    //                     ...user,
+    //                     active: !user.active
+    //                 } : user
+    //             ))
+    //         );
+    //     },
+    //     // [users]
+    //     []
+    // );
     // 리액트 개발 시 useCallback, useMemo, React.memo 는 컴포넌트의 성능을 실제로 개선할 수 있는 상황에서만 사용
     // User 컴포넌트에 b 와 button 에 onclick 으로 설정해준 함수들은, 해당 함수들을 useCallback 으로 재사용한다고 리랜더링이 막아지지는 않음
 
@@ -240,94 +401,95 @@ function App() {
     //#######################################
 
     // useMemo 후 메모리할 데이터를 deps 에 넣어주면 users 가 변경되면 함수 실행 / 변경이 없으면 기존값 재사용
-    let activeUser = useMemo(() => countActiveUsers(users), [users]);
-
-    return (
-        <div className="App">
-            <div>
-                <div className="nav-black">
-                    <div>UserList</div>
-                </div>
-                <h3>활성 사용자 수 : {activeUser} 명</h3>
-                <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
-            </div>
-            <div>
-                <div className="nav-black">
-                    <div>Create User</div>
-                </div>
-                <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate}/>
-            </div>
-            <div>
-                <div className="nav-black">
-                    <div>React Study</div>
-                </div>
-                {/*<img src={logo} className="App-logo" alt="logo" />*/}
-                {/*<img src={logo} className={temp} alt="logo" />*/}
-                {cafe}
-                {textNumber()}
-            </div>
-            <div>
-                <div className="nav-black">
-                    <div>UseState</div>
-                </div>
-                <button onClick={fnChangeTitle} style={{marginTop: "20px", color: "red"}}>글자 변경 버튼</button>
-                <h4>useState Test (useState) : {useState}</h4>
-                <h4>useState Test (title) : {title}</h4>
-                <h4>useState Test (title[0]) : {title[0]}</h4>
-                <h4>useState Test (title[1]) : {title[1]}</h4>
-            </div>
-            <div>
-                <div className="nav-black">
-                    <div>OnClick</div>
-                </div>
-                <div className="list">
-                    <p><span onClick={() => {console.log(1)}}>클릭 시 숫자가 증가합니다.</span> = 0</p>
-                </div>
-                <div className="list">
-                    <p><span onClick={() => {changeViews(views + 1)}}>클릭 시 숫자가 증가합니다.</span> = {views}</p>
-                </div>
-                <div>
-                    <h4>{number}</h4>
-                    <button onClick={onIncrease}>+1</button>
-                    <button onClick={onDecrease}>-1</button>
-                </div>
-            </div>
-            <div>
-                <div className="nav-black">
-                    <div>Modal</div>
-                </div>
-                <Modal />
-            </div>
-            <div>
-                <div className="nav-black">
-                    <div>New.js</div>
-                </div>
-                <Hello name='react' color='red' />
-                <Hello color='pink' />
-                <Wrapper>
-                    <Hello name='react' color='red' isSpecial={true} isTest />
-                    <Hello color='pink' />
-                </Wrapper>
-            </div>
-            <div>
-                <div className="nav-black">
-                    <div>InputSample</div>
-                </div>
-                <InputSample />
-            </div>
-        </div>);
+    // let activeUser = useMemo(() => countActiveUsers(users), [users]);
+    //
+    // return (
+    //     <div className="App">
+    //         <div>
+    //             <div className="nav-black">
+    //                 <div>UserList</div>
+    //             </div>
+    //             <h3>활성 사용자 수 : {activeUser} 명</h3>
+    //             <UserList users={users} onRemove={onRemove} onToggle={onToggle} />
+    //         </div>
+    //         <div>
+    //             <div className="nav-black">
+    //                 <div>Create User</div>
+    //             </div>
+    //             <CreateUser username={username} email={email} onChange={onChange} onCreate={onCreate}/>
+    //         </div>
+    //         <div>
+    //             <div className="nav-black">
+    //                 <div>React Study</div>
+    //             </div>
+    //             {/*<img src={logo} className="App-logo" alt="logo" />*/}
+    //             {/*<img src={logo} className={temp} alt="logo" />*/}
+    //             {cafe}
+    //             {textNumber()}
+    //         </div>
+    //         <div>
+    //             <div className="nav-black">
+    //                 <div>UseState</div>
+    //             </div>
+    //             <button onClick={fnChangeTitle} style={{marginTop: "20px", color: "red"}}>글자 변경 버튼</button>
+    //             <h4>useState Test (useState) : {useState}</h4>
+    //             <h4>useState Test (title) : {title}</h4>
+    //             <h4>useState Test (title[0]) : {title[0]}</h4>
+    //             <h4>useState Test (title[1]) : {title[1]}</h4>
+    //         </div>
+    //         <div>
+    //             <div className="nav-black">
+    //                 <div>OnClick</div>
+    //             </div>
+    //             <Counter></Counter>
+    //             {/*<div className="list">*/}
+    //             {/*    <p><span onClick={() => {console.log(1)}}>클릭 시 숫자가 증가합니다.</span> = 0</p>*/}
+    //             {/*</div>*/}
+    //             {/*<div className="list">*/}
+    //             {/*    <p><span onClick={() => {changeViews(views + 1)}}>클릭 시 숫자가 증가합니다.</span> = {views}</p>*/}
+    //             {/*</div>*/}
+    //             {/*<div>*/}
+    //             {/*    <h4>{number}</h4>*/}
+    //             {/*    <button onClick={onIncrease}>+1</button>*/}
+    //             {/*    <button onClick={onDecrease}>-1</button>*/}
+    //             {/*</div>*/}
+    //         </div>
+    //         <div>
+    //             <div className="nav-black">
+    //                 <div>Modal</div>
+    //             </div>
+    //             <Modal />
+    //         </div>
+    //         <div>
+    //             <div className="nav-black">
+    //                 <div>New.js</div>
+    //             </div>
+    //             <Hello name='react' color='red' />
+    //             <Hello color='pink' />
+    //             <Wrapper>
+    //                 <Hello name='react' color='red' isSpecial={true} isTest />
+    //                 <Hello color='pink' />
+    //             </Wrapper>
+    //         </div>
+    //         <div>
+    //             <div className="nav-black">
+    //                 <div>InputSample</div>
+    //             </div>
+    //             <InputSample />
+    //         </div>
+    //     </div>);
 }
 
 // Component 는 function App() 과 같은 선상에서 만들어 준다
 // 단점은 state 쓸 때 복잡해진다 (상위 Component 에서 만든 state 를 쓰려면 props 문법을 이용해야한다)
-function Modal () {
-    return (
-        <div className="modal" style={{marginTop: "20px", padding: "20px", background: "#eee"}}>
-            <h2>제목</h2>
-            <p>날짜</p>
-            <p>내용</p>
-        </div>);
-};
+// function Modal () {
+//     return (
+//         <div className="modal" style={{marginTop: "20px", padding: "20px", background: "#eee"}}>
+//             <h2>제목</h2>
+//             <p>날짜</p>
+//             <p>내용</p>
+//         </div>);
+// };
 
 export default App;
 // export default
