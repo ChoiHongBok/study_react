@@ -8,6 +8,7 @@ import './App.css';
 import UserList from "./UserList";
 import CreateUser from "./CreateUser";
 // import Counter from "./Counter";
+import useInputs from "./hooks/useInputs"
 
 // <div class="클래스명"> -> <div className="클래스명"> 으로 사용
 /*function App() {
@@ -64,17 +65,17 @@ const initialState = {
 
 function reducer (state, action) {
     switch (action.type) {
-        case "CHANGE_INPUT" :
-            return {
-                ...state,
-                inputs: {
-                    ...state.inputs,
-                    [action.name]: action.value
-                }
-            };
+        // case "CHANGE_INPUT" :
+        //     return {
+        //         ...state,
+        //         inputs: {
+        //             ...state.inputs,
+        //             [action.name]: action.value
+        //         }
+        //     };
         case "CREATE_USER" :
             return {
-                inputs: initialState.inputs,
+                // inputs: initialState.inputs,
                 users: state.users.concat(action.user)
             };
         case "TOGGLE_USER" :
@@ -98,18 +99,23 @@ function reducer (state, action) {
 
 function App() {
     const [state, dispatch] = useReducer(reducer, initialState);
+    // const {users} = state;
+    // const {username, email} = state.inputs;
+    const [{username, email}, onChange, reset] = useInputs({
+        username: "",
+        email: ""
+    });
     const {users} = state;
-    const {username, email} = state.inputs;
 
-    const onChange = useCallback(e => {
-        const {name, value} = e.target;
-
-        dispatch({
-            type: "CHANGE_INPUT",
-            name,
-            value
-        });
-    }, []);
+    // const onChange = useCallback(e => {
+    //     const {name, value} = e.target;
+    //
+    //     dispatch({
+    //         type: "CHANGE_INPUT",
+    //         name,
+    //         value
+    //     });
+    // }, []);
 
     const onCreate = useCallback(() => {
         dispatch({
@@ -121,7 +127,8 @@ function App() {
                 active: false
             }
         })
-    }, [username, email]);
+        reset();
+    }, [username, email, reset]);
 
     const onToggle = useCallback((id) => {
         dispatch({
