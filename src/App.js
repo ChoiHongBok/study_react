@@ -9,7 +9,10 @@ function App() {
     let topTitle = 'React 연습'
 
     // state 는 데이터가 변경되면 HTML 이 자동으로 랜더링된다.
-    let [title, changeTitle] = useState(['강남 카페', '강남 돈까스']);
+    let [title, changeTitle] = useState(['스타벅스', '강남 돈까스']);
+    let [recommend, changeRecommend] = useState(0);
+
+    // onClick={함수} / onClick={() => {}}
 
     return (
         <div classname="txt_middle">
@@ -17,7 +20,9 @@ function App() {
                 <div style={{color: "red", fontSize: "30px"}}>{topTitle}</div>
             </div>
             <div className="list">
-                <h3>{title[0]}</h3>
+                <div className="pad5">
+                    {title[0]} <span className="marL5" onClick={() => {changeRecommend(recommend + 1)}}>👍</span> <span>{recommend}</span>
+                </div>
             </div>
         </div>
     );
