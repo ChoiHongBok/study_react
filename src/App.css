@@ -1,6 +1,7 @@
-.txt_middle {text-align: center;}
+.txtM {text-align: center;}
+.txtL {text-align: left;}
 
-.nav_black {background: #000; width: 100%; display: flex; color: #FFF; padding: 20px; font-weight: 600; font-size: 20px;}
+.navBlack {background: #000; width: 100%; display: flex; color: #FFF; padding: 20px; font-weight: 600; font-size: 20px;}
 
 .pad5 {padding: 5px;}
 

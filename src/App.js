@@ -13,18 +13,39 @@ function App() {
     let [recommend, changeRecommend] = useState(0);
 
     // onClick={함수} / onClick={() => {}}
+    // 주의 : onClick={함수()} 사용시 바로 함수 실행
+    function clickChangeTitle() {
+        // state 를 직접 건들지 않고 DeepCopy 후 대체
+        let newTitle = [...title];
+        newTitle[0]  = '이디야';
+        changeTitle(newTitle);
+    }
 
     return (
-        <div classname="txt_middle">
-            <div className="nav_black">
+        <div className="txtM">
+            <div className="navBlack">
                 <div style={{color: "red", fontSize: "30px"}}>{topTitle}</div>
             </div>
-            <div className="list">
-                <div className="pad5">
-                    {title[0]} <span className="marL5" onClick={() => {changeRecommend(recommend + 1)}}>👍</span> <span>{recommend}</span>
-                </div>
+            <div className="txtL pad5">
+                {title[0]}
+                <span className="marL5" onClick={() => {changeRecommend(recommend + 1)}}>👍 {recommend}</span>
+                <button className="marL5" onClick={clickChangeTitle}>카페 이름 변경</button>
             </div>
+
+            <Modal />
         </div>
+    );
+}
+
+function Modal() {
+    return (
+        // 의미 없는 <div></div> 대신 <></> 사용 가능 : return 안에 있는 건 태그 하나로 묶어야 한다.
+        <div className="txtL pad5">
+            <h4>Component Modal</h4>
+        </div>
+        // <>
+        //     <h2>Component Modal</h2>
+        // </>
     );
 }
 
