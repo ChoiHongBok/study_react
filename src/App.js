@@ -1,4 +1,4 @@
-import React, {useState, useRef, useMemo} from 'react';
+import React, {useState, useRef, useMemo, useCallback} from 'react';
 import Hello from './Hello';
 import Wrapper from './Wrapper';
 import Counter from "./Counter";
@@ -42,17 +42,17 @@ function App() {
 
     let {userName, email} = createUser;
 
-    const onChange = (e) => {
+    const onChange = useCallback((e) => {
         const {name, value} = e.target;
 
         changeCreateUser({
             ...createUser,
             [name]: value
         });
-    };
+    }, [createUser]);
 
     const nextId = useRef(4); // useRef : nextId.current 에 기본값이 된다
-    const onCreate = () => {
+    const onCreate = useCallback(() => {
         const user = {
             id: nextId.current,
             username: userName,
@@ -71,21 +71,21 @@ function App() {
         });
 
         nextId.current += 1;
-    };
+    }, [users, userName, email]);
 
-    const onRemove = (id) => {
+    const onRemove = useCallback((id) => {
         changeUsers(
             users.filter(user => {
                 return user.id !== id;
             })
         );
-    };
+    }, [users]);
 
-    const onToggle = (id) => {
+    const onToggle = useCallback((id) => {
         changeUsers(users.map(user =>
             user.id == id ? {...user, active: !user.active} : user
         ));
-    }
+    }, [users]);
 
     // useMemo 는 이전에 계산 한 값을 재사용한다는 의미를 가진다.
     // 그래서 랜더링 되어도 본인이 원하는데이터가 아니면 랜더링 되지 않고 이전에 값을 사용한다.
