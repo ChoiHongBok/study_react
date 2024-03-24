@@ -8,34 +8,16 @@ function User({user}) {
     )
 }
 
-function UserList() {
-    const users = [
-        {
-            id: 1,
-            username: 'velopert',
-            email: 'public.velopert@gmail.com'
-        },
-        {
-            id: 2,
-            username: 'tester',
-            email: 'tester@example.com'
-        },
-        {
-            id: 3,
-            username: 'liz',
-            email: 'liz@example.com'
-        }
-    ];
-
+function UserList({users}) {
     return (
         <div>
             {users.map(user => (
                 <User user={user} key={user.id} />
             ))}
             {/* 아이디가 없는 경우에는 */}
-            {users.map((user, index) => (
-                <User user={user} key={index} />
-            ))}
+            {/*{users.map((user, index) => (*/}
+            {/*    <User user={user} key={index} />*/}
+            {/*))}*/}
         </div>
     );
 }
