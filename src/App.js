@@ -7,10 +7,8 @@ import UserList from "./UserList";
 import CreateUser from "./CreateUser";
 
 function countActiveUsers(users) {
-    console.log("활성 사용자 수 세는중");
-    return users.filter(user => {
-        return user.active;
-    }).length;
+    console.log('활성 사용자 수를 세는중...');
+    return users.filter(user => user.active).length;
 }
 
 function App() {
@@ -45,11 +43,11 @@ function App() {
     const onChange = useCallback((e) => {
         const {name, value} = e.target;
 
-        changeCreateUser({
+        changeCreateUser(createUser => ({
             ...createUser,
             [name]: value
-        });
-    }, [createUser]);
+        }));
+    }, []);
 
     const nextId = useRef(4); // useRef : nextId.current 에 기본값이 된다
     const onCreate = useCallback(() => {
@@ -63,7 +61,9 @@ function App() {
         //     ...users,
         //     user
         // ]);
-        changeUsers(users.concat(user));
+        changeUsers(users => {
+            return users.concat(user);
+        });
 
         changeCreateUser({
             userName: "",
@@ -71,27 +71,27 @@ function App() {
         });
 
         nextId.current += 1;
-    }, [users, userName, email]);
+    }, [userName, email]);
 
     const onRemove = useCallback((id) => {
-        changeUsers(
+        changeUsers(users => {
             users.filter(user => {
                 return user.id !== id;
             })
-        );
-    }, [users]);
+        });
+    }, []);
 
     const onToggle = useCallback((id) => {
-        changeUsers(users.map(user =>
-            user.id == id ? {...user, active: !user.active} : user
-        ));
-    }, [users]);
+        changeUsers(users => {
+            users.map(user =>
+                user.id == id ? {...user, active: !user.active} : user
+            )
+        });
+    }, []);
 
     // useMemo 는 이전에 계산 한 값을 재사용한다는 의미를 가진다.
     // 그래서 랜더링 되어도 본인이 원하는데이터가 아니면 랜더링 되지 않고 이전에 값을 사용한다.
-    let activeUserCount = useMemo(() => {
-        countActiveUsers(users);
-    }, [users]);
+    let activeUserCount = useMemo(() => countActiveUsers(users), [users]);
 
     return (
         <div>
