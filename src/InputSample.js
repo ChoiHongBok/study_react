@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 
 function InputSample() {
     let [account, changeAccount] = useState({
@@ -6,6 +6,8 @@ function InputSample() {
         nick: ""
     });
 
+    // useRef 를 이용하여
+    const nameInput = useRef();
     const {name, nick} = account;
 
     function onInput(e) {
@@ -22,11 +24,13 @@ function InputSample() {
             name: "",
             nick: ""
         });
+
+        nameInput.current.focus();
     }
 
     return (
         <>
-            <input name="name" value={name} onInput={onInput} placeholder="이름" />
+            <input name="name" value={name} onInput={onInput} ref={nameInput} placeholder="이름" />
             <input name="nick" value={nick} onInput={onInput} placeholder="닉네임" />
             <button onClick={onReset}>초기화</button>
             <div>
