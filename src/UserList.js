@@ -19,11 +19,11 @@ function User({user, onRemove, onToggle}) {
     // - 넣지 않게 된다면 useEffect 에 등록한 함수가 실행 될 때 최신 props / 상태를 가르키지 않게 된다
     // - deps 파라미터를 생략한다면, 컴포넌트가 리렌더링 될 때마다 호출이 됩
     useEffect(() => {
-        console.log('user 값이 설정됨');
-        console.log(user);
+        // console.log('user 값이 설정됨');
+        // console.log(user);
         return () => {
-            console.log('user 가 바뀌기 전..');
-            console.log(user);
+            // console.log('user 가 바뀌기 전..');
+            // console.log(user);
         }
     }, [user]);
 
