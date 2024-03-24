@@ -87,6 +87,8 @@ function App() {
         ));
     }
 
+    // useMemo 는 이전에 계산 한 값을 재사용한다는 의미를 가진다.
+    // 그래서 랜더링 되어도 본인이 원하는데이터가 아니면 랜더링 되지 않고 이전에 값을 사용한다.
     let activeUserCount = useMemo(() => {
         countActiveUsers(users);
     }, [users]);
