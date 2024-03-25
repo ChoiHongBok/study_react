@@ -1,18 +1,46 @@
-import React, {useState} from 'react';
+import React, {useState, useReducer} from 'react';
+
+function reducer(state, action) {
+    switch (action.type) {
+        case "INCREMENT": return state + 1;
+        case "DECREMENT": return state - 1;
+        default: return state;
+    }
+}
 
 function Counter() {
-    let [number, changeNumber] = useState(0);
+    // useReducer 사용
+    const [number, dispatch] = useReducer(reducer, 0);
 
     const onIncrease = () => {
-        // changeNumber(number + 1);
-        changeNumber(prevNumber => prevNumber + 1);
-    }
+        dispatch({type: "INCREMENT"});
+    };
+
     const onDecrease = () => {
-        // changeNumber(number - 1);
-        changeNumber(prevNumber => {
-            return prevNumber <= 0 ? prevNumber : prevNumber - 1;
-        });
-    }
+        dispatch({type: "DECREMENT"});
+    };
+
+    return (
+        <div>
+            <button onClick={onIncrease}>+1</button>
+            <button onClick={onDecrease}>-1</button>
+            <span style={{marginLeft: "5px"}}>{number}</span>
+        </div>
+    );
+
+    // useState 사용
+    // let [number, changeNumber] = useState(0);
+    //
+    // const onIncrease = () => {
+    //     // changeNumber(number + 1);
+    //     changeNumber(prevNumber => prevNumber + 1);
+    // }
+    // const onDecrease = () => {
+    //     // changeNumber(number - 1);
+    //     changeNumber(prevNumber => {
+    //         return prevNumber <= 0 ? prevNumber : prevNumber - 1;
+    //     });
+    // }
 
     // test1 은 이 함수 당시에 number 값에 + 1 을 증가시키기 떄문에 최종적으로 + 1 만 증가한다
     // const test1 = () => {
@@ -28,15 +56,15 @@ function Counter() {
     //     console.log(number);
     // }
 
-    return (
-        <div>
-            <button onClick={onIncrease}>+1</button>
-            <button onClick={onDecrease}>-1</button>
-            {/*<button onClick={test1}>+2</button>*/}
-            {/*<button onClick={test2}>+2</button>*/}
-            <span style={{marginLeft: "5px"}}>{number}</span>
-        </div>
-    );
+    // return (
+    //     <div>
+    //         <button onClick={onIncrease}>+1</button>
+    //         <button onClick={onDecrease}>-1</button>
+    //         {/*<button onClick={test1}>+2</button>*/}
+    //         {/*<button onClick={test2}>+2</button>*/}
+    //         <span style={{marginLeft: "5px"}}>{number}</span>
+    //     </div>
+    // );
 }
 
 export default Counter;
