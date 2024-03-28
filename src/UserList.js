@@ -32,7 +32,7 @@ function User({user, onRemove, onToggle}) {
             <b onClick={() => onToggle(user.id)} style={{color: user.active ? 'green' : 'black'}}>
                 {user.username}
             </b>
-            <span>{user.email}</span>
+            <span> {user.email} </span>
             <button onClick={() => onRemove(user.id)}>삭제</button>
         </div>
     )
@@ -44,10 +44,6 @@ function UserList({users, onRemove, onToggle}) {
             {users.map(user => (
                 <User user={user} onRemove={onRemove} onToggle={onToggle} key={user.id} />
             ))}
-            {/* 아이디가 없는 경우에는 */}
-            {/*{users.map((user, index) => (*/}
-            {/*    <User user={user} key={index} />*/}
-            {/*))}*/}
         </div>
     );
 }
